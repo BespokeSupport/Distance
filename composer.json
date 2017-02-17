@@ -1,0 +1,16 @@
+{
+    "name": "bespoke-support/distance",
+    "license": "MIT",
+    "description": "Library to Fetch Distance from Maps API",
+    "type": "library",
+    "minimum-stability": "stable",
+    "autoload": {
+        "psr-4": { "BespokeSupport\\Distance\\": "src/" }
+    },
+    "require": {
+        "bespoke-support/location":"@dev"
+    },
+    "suggest": {
+        "bespoke-support/database-wrapper":"@dev"
+    }
+}
