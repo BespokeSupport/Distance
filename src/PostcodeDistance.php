@@ -6,8 +6,7 @@ use BespokeSupport\DatabaseWrapper\DatabaseWrapperInterface;
 use BespokeSupport\Location\Postcode;
 
 /**
- * Class PostcodeDistance
- * @package BespokeSupport\Distance
+ * Class PostcodeDistance.
  */
 class PostcodeDistance
 {
@@ -46,11 +45,12 @@ class PostcodeDistance
     /**
      * @param $fromPostcode
      * @param $toPostcode
+     *
      * @return \stdClass
      */
     public function getCache($fromPostcode, $toPostcode)
     {
-        $sql = <<<SQL
+        $sql = <<<'SQL'
             SELECT * FROM postcodeDistance
             WHERE
             (fromPostcode = :fromPostcode AND toPostcode = :toPostcode)
@@ -59,10 +59,10 @@ class PostcodeDistance
              ORDER BY created DESC
             LIMIT 1
 SQL;
-        $row = $this->database->sqlFetchOne($sql, array(
+        $row = $this->database->sqlFetchOne($sql, [
             'fromPostcode' => $fromPostcode,
-            'toPostcode' => $toPostcode,
-        ));
+            'toPostcode'   => $toPostcode,
+        ]);
 
         return $row;
     }
@@ -98,7 +98,7 @@ SQL;
         }
 
         if (!count($toArray) || !count($fromArray)) {
-            return null;
+            return;
         }
 
         if ($this->database && count($fromArray) == 1 && count($toArray) == 1) {
@@ -107,6 +107,7 @@ SQL;
                 $route = new Route();
                 $route->totalDistanceMetres = $row->distanceRoad;
                 $route->totalTimeSeconds = $row->durationSeconds;
+
                 return $route;
             }
         }
@@ -122,9 +123,9 @@ SQL;
 
         if ($this->database) {
             $this->database->insert('postcodeDistance', [
-                'fromPostcode' => $fromArray[0],
-                'toPostcode' => $toArray[0],
-                'distanceRoad' => $response->totalDistanceMetres,
+                'fromPostcode'    => $fromArray[0],
+                'toPostcode'      => $toArray[0],
+                'distanceRoad'    => $response->totalDistanceMetres,
                 'durationSeconds' => $response->totalTimeSeconds,
             ]);
         }

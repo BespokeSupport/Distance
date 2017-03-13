@@ -3,7 +3,7 @@
 namespace BespokeSupport\Distance;
 
 /**
- * Class Distance
+ * Class Distance.
  */
 class Distance
 {
@@ -22,7 +22,7 @@ class Distance
     /**
      * @var string
      */
-    protected $googleUrl = "https://maps.googleapis.com/maps/api/distancematrix/";
+    protected $googleUrl = 'https://maps.googleapis.com/maps/api/distancematrix/';
     /**
      * @var
      */
@@ -37,15 +37,16 @@ class Distance
     private $returnType;
 
     /**
-     * @param null $apiKey
+     * @param null   $apiKey
      * @param string $dataFormat
      * @param string $returnType
+     *
      * @throws \Exception
      */
     public function __construct($apiKey = null, $dataFormat = 'both', $returnType = 'json')
     {
         if (!$apiKey) {
-            throw new \Exception("You must specify an API key");
+            throw new \Exception('You must specify an API key');
         } else {
             $this->apiKey = $apiKey;
         }
@@ -66,6 +67,7 @@ class Distance
     /**
      * @param null $from
      * @param null $to
+     *
      * @return bool
      */
     public function validateInput($from = null, $to = null)
@@ -73,6 +75,7 @@ class Distance
         if ($to && $from && count($to) > 0 && count($from) > 0) {
             $this->destinations = $to;
             $this->origins = $from;
+
             return true;
         } elseif (count($this->destinations) < 1 && count($this->origins) < 1) {
             return false;
@@ -98,34 +101,36 @@ class Distance
 
     /**
      * @param $response
-     * @return \StdClass|boolean
+     *
      * @throws \Exception
+     *
+     * @return \StdClass|bool
      */
     public function validateResponse($response)
     {
         $hasError = false;
 
-        if ($response->status === "OVER_QUERY_LIMIT") {
+        if ($response->status === 'OVER_QUERY_LIMIT') {
             throw new \Exception($response->error_message);
         }
 
-        if ($response->status === "REQUEST_DENIED") {
+        if ($response->status === 'REQUEST_DENIED') {
             throw new \Exception($response->error_message);
         }
 
-        if ($response->status === "INVALID_REQUEST") {
+        if ($response->status === 'INVALID_REQUEST') {
             $hasError = true;
-            $this->errors[] = "Request was not valid";
+            $this->errors[] = 'Request was not valid';
         }
 
         foreach ($response->destination_addresses as $index => $address) {
-            if ($address === "") {
+            if ($address === '') {
                 $hasError = true;
                 $this->errors[] = "Destination address '{$this->destinations[$index]}' was invalid";
             }
         }
         foreach ($response->origin_addresses as $index => $address) {
-            if ($address === "") {
+            if ($address === '') {
                 $hasError = true;
                 $this->errors[] = "Origin address '{$this->origins[$index]}' was invalid";
             }
@@ -141,8 +146,10 @@ class Distance
     /**
      * @param null $from
      * @param null $to
-     * @return bool|Route
+     *
      * @throws \Exception
+     *
+     * @return bool|Route
      */
     public function getResponse($from = null, $to = null)
     {
@@ -177,6 +184,7 @@ class Distance
 
     /**
      * @param $url
+     *
      * @return bool|mixed
      */
     public function sendRequest($url)
@@ -190,9 +198,10 @@ class Distance
         $error = curl_error($ch);
         curl_close($ch);
 
-        if ($error !== "") {
+        if ($error !== '') {
             return false;
         }
+
         return json_decode($results);
     }
 }
