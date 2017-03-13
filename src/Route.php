@@ -3,7 +3,7 @@
 namespace BespokeSupport\Distance;
 
 /**
- * Class Route
+ * Class Route.
  */
 class Route
 {
